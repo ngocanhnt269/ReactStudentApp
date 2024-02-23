@@ -6,12 +6,12 @@ import NotFoundPage from "../components/NotFoundPage";
 import { useState, useEffect } from "react";
 import CONSTANTS from "../data/config";
 import AddStudentForm from "../components/AddStudentForm";
+import UpdateStudentForm from "../components/UpdateStudentForm";
+import DeleteStudentForm from "../components/DeleteStudentForm";
 
 const StudentDetailPage = () => {
   // any JS code goes here
   const { id } = useParams();
-
-  //const student = students.find((data) => data.studentId === Number(id));
 
   const [studentInfo, setStudentInfo] = useState({
     firstName: "",
@@ -43,6 +43,10 @@ const StudentDetailPage = () => {
       </h4>
       <div style={{ width: "50%", float: "left" }}>
         <AddStudentForm />
+        <br />
+        <UpdateStudentForm studentInfo={studentInfo} />
+        <br />
+        <DeleteStudentForm studentInfo={studentInfo} />
       </div>
     </React.Fragment>
   );

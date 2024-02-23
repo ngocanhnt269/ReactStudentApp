@@ -1,24 +1,34 @@
-import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CONSTANTS from "../data/config";
 
-const AddStudentForm = () => {
+const UpdateStudentForm = ({ studentInfo }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [school, setSchool] = useState("");
-
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const addStudent = () => {
-    const result = fetch(`${CONSTANTS.BASE_API_URL}students/`, {
-      method: "post",
+  // Set initial form values based on the provided studentInfo
+  useEffect(() => {
+    setFirstName(studentInfo.firstName);
+    setLastName(studentInfo.lastName);
+    setSchool(studentInfo.school);
+  }, [studentInfo]);
+
+  const updateStudent = () => {
+    const result = fetch(`${CONSTANTS.BASE_API_URL}students/${id}`, {
+      method: "put",
       body: JSON.stringify({
+        studentId: id,
         firstName,
         lastName,
         school,
       }),
       headers: { "Content-Type": "application/json" },
     });
+
     result
       .then((response) => response.json())
       .then((data) => console.log(data))
@@ -31,7 +41,7 @@ const AddStudentForm = () => {
     <React.Fragment>
       <div className="panel panel-default">
         <form>
-          <h3>ADD A NEW STUDENT: </h3>
+          <h3>UPDATE STUDENT'S INFORMATION:</h3>
           <div className="form-group">
             <label>First Name:</label>
             <input
@@ -57,17 +67,19 @@ const AddStudentForm = () => {
             <input
               className="form-control"
               type="text"
-              placeholder="Occupation"
+              placeholder="School"
               value={school}
               onChange={(event) => setSchool(event.target.value)}
             />
           </div>
-
           <input
             type="submit"
-            onClick={() => addStudent()}
+            onClick={(e) => {
+              e.preventDefault();
+              updateStudent();
+            }}
             className="btn btn-success"
-            value="Add"
+            value="Update"
           />
         </form>
       </div>
@@ -75,4 +87,4 @@ const AddStudentForm = () => {
   );
 };
 
-export default AddStudentForm;
+export default UpdateStudentForm;
